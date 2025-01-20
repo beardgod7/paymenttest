@@ -58,7 +58,8 @@ app.post('/webhook', (req, res) => {
         .createHmac('sha512', "sk_test_68adfa77e69be650635fa320a35025a9dfb56048")
         .update(JSON.stringify(req.body))
         .digest('hex');
-    console.log("AMherrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",hash)
+    console.log("AM herrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",hash)
+    console.log("AM herrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",req.headers['x-paystack-signature'])
 
     if (hash !== req.headers['x-paystack-signature']) {
         return res.status(401).json({ message: 'Invalid Webhook Signature' });
