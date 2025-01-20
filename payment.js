@@ -58,13 +58,15 @@ app.post('/webhook', (req, res) => {
      //validate event
      const hash = crypto.createHmac('sha512', PAYSTACK_SECRET_KEY).update(JSON.stringify(req.body)).digest('hex');
      if (hash == req.headers['x-paystack-signature']) {
+        console.log("x-payyyyyyyyyyyyyyyyyy",req.headers['x-paystack-signature'])
+        console.log("hereeeeeeeeeeeeeeeeeeeeeee",hash)
      // Retrieve the request's body
      const event = req.body;
      console.log(event)
      console.log(`Webhook received: ${JSON.stringify(event)}`);
      // Do something with event  
      }
-    res.send(200);
+     res.sendStatus(200);
 });
 
 // Landing Page Route
