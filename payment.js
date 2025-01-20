@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 // Environment Variables
 const PORT = process.env.PORT || 3000;
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY;
-const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+const WEBHOOK_SECRET = process.env.PAYSTACK_SECRET_KEY;
 
 // Initialize Payment
 app.post('/initialize', async (req, res) => {
@@ -55,7 +55,7 @@ app.get('/verify/:reference', async (req, res) => {
 // Webhook Handler
 app.post('/webhook', (req, res) => {
     const hash = crypto
-        .createHmac('sha512', WEBHOOK_SECRET)
+        .createHmac('sha512', PAYSTACK_SECRET_KEY)
         .update(JSON.stringify(req.body))
         .digest('hex');
 
