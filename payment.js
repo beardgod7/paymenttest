@@ -57,6 +57,9 @@ app.post('/webhook', (req, res) => {
 
      //validate event
      const hash = crypto.createHmac('sha512', PAYSTACK_SECRET_KEY).update(JSON.stringify(req.body)).digest('hex');
+     console.log("x-payyyyyyyyyyyyyyyyyy",req.headers['x-paystack-signature'])
+     console.log("hereeeeeeeeeeeeeeeeeeeeeee",hash)
+
      if (hash == req.headers['x-paystack-signature']) {
         console.log("x-payyyyyyyyyyyyyyyyyy",req.headers['x-paystack-signature'])
         console.log("hereeeeeeeeeeeeeeeeeeeeeee",hash)
