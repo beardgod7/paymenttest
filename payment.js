@@ -64,18 +64,7 @@ app.post('/webhook', (req, res) => {
      console.log(`Webhook received: ${JSON.stringify(event)}`);
      // Do something with event  
      }
-
-    if (hash !== req.headers['x-paystack-signature']) {
-        return res.status(401).json({ message: 'Invalid Webhook Signature' });
-    }
-    const event = req.body;
-    // Process the webhook event
-    if (event.event === 'charge.success') {
-        console.log('Payment successful:', event.data.reference);
-    }
-
-    res.status(200).json({ status: 'success' });
-    //res.send(200);
+    res.send(200);
 });
 
 // Landing Page Route
