@@ -55,7 +55,7 @@ app.get('/verify/:reference', async (req, res) => {
 // Webhook Handler
 app.post('/webhook', (req, res) => {
     const hash = crypto
-        .createHmac('sha512', "sk_test_68adfa77e69be650635fa320a35025a9dfb56048")
+        .createHmac('sha512', PAYSTACK_SECRET_KEY)
         .update(JSON.stringify(req.body))
         .digest('hex');
     const signature = req.headers['x-paystack-signature'];
