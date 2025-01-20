@@ -7,7 +7,7 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(express.json());
+app.use(bodyParser.json());
 
 // Environment Variables
 const PORT = process.env.PORT || 3000;
@@ -53,26 +53,28 @@ app.get('/verify/:reference', async (req, res) => {
 });
 
 // Webhook Handler
-app.post(
-    '/webhook',
-    bodyParser.raw({ type: 'application/json' }),
-    (req, res) => {
-        // Compute hash using raw body
-        const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
+app.post('/webhook', (req, res) => {
+    const hash = crypto
+        .createHmac('sha512', "sk_test_68adfa77e69be650635fa320a35025a9dfb56048")
+        .update(JSON.stringify(req.body))
+        .digest('hex');
+    console.log("AM herrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",hash)
+    console.log(req.headers['x-paystack-signature'])
 
-        console.log('Generated Hash:', hash);
-        console.log('Received Signature:', req.headers['x-paystack-signature']);
-
-        if (hash !== req.headers['x-paystack-signature']) {
-            return res.status(401).json({ message: 'Invalid Webhook Signature' });
-        }
-
-        const event = JSON.parse(req.body.toString());
-        console.log('Webhook Event:', event);
-
-        res.status(200).json({ status: 'success' });
+    if (hash === req.headers['x-paystack-signature']) {
+        return res.status(401).json({ message: 'Invalid Webhook Signature' });
     }
-);
+
+    const event = req.body;
+    console.log(`Webhook received: ${JSON.stringify(event)}`);
+
+    // Process the webhook event
+    if (event.event === 'charge.success') {
+        console.log('Payment successful:', event.data.reference);
+    }
+
+    res.status(200).json({ status: 'success' });
+});
 
 // Landing Page Route
 app.get('/', (req, res) => {
