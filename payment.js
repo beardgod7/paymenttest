@@ -7,7 +7,7 @@ require('dotenv').config();
 const app = express();
 
 // Middleware
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Environment Variables
 const PORT = process.env.PORT || 3000;
@@ -54,26 +54,36 @@ app.get('/verify/:reference', async (req, res) => {
 
 // Webhook Handler
 app.post('/webhook', (req, res) => {
-    const hash = crypto
-        .createHmac('sha512', "sk_test_68adfa77e69be650635fa320a35025a9dfb56048")
-        .update(JSON.stringify(req.body))
-        .digest('hex');
-        console.log('Generated Hash:', hash);
-        console.log('Received Signature:', req.headers['x-paystack-signature']);
 
-    if (hash !== req.headers['x-paystack-signature']) {
-        return res.status(401).json({ message: 'Invalid Webhook Signature' });
-    }
+     //validate event
+     const hash = crypto.createHmac('sha512', PAYSTACK_SECRET_KEY).update(JSON.stringify(req.body)).digest('hex');
+     if (hash == req.headers['x-paystack-signature']) {
+     // Retrieve the request's body
+     const event = req.body;
+     console.log(event)
+     // Do something with event  
+     }
+    // const hash = crypto
+    //     .createHmac('sha512', "sk_test_68adfa77e69be650635fa320a35025a9dfb56048")
+    //     .update(JSON.stringify(req.body))
+    //     .digest('hex');
+    //     console.log('Generated Hash:', hash);
+    //     console.log('Received Signature:', req.headers['x-paystack-signature']);
 
-    const event = req.body;
-    console.log(`Webhook received: ${JSON.stringify(event)}`);
+    // if (hash !== req.headers['x-paystack-signature']) {
+    //     return res.status(401).json({ message: 'Invalid Webhook Signature' });
+    // }
 
-    // Process the webhook event
-    if (event.event === 'charge.success') {
-        console.log('Payment successful:', event.data.reference);
-    }
+    // const event = req.body;
+    // console.log(`Webhook received: ${JSON.stringify(event)}`);
 
-    res.status(200).json({ status: 'success' });
+    // // Process the webhook event
+    // if (event.event === 'charge.success') {
+    //     console.log('Payment successful:', event.data.reference);
+    // }
+
+    // res.status(200).json({ status: 'success' });
+    res.send(200);
 });
 
 // Landing Page Route
