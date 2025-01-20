@@ -62,7 +62,7 @@ app.post('/webhook', (req, res) => {
     console.log("AM herrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",hash)
     console.log(signature)
 
-    if (hash === signature) {
+    if (hash !== signature) {
         return res.status(401).json({ message: 'Invalid Webhook Signature' });
     }
 
