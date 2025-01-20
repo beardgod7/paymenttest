@@ -56,27 +56,19 @@ app.get('/verify/:reference', async (req, res) => {
 app.post('/webhook', (req, res) => {
 
      //validate event
-    //  const hash = crypto.createHmac('sha512', PAYSTACK_SECRET_KEY).update(JSON.stringify(req.body)).digest('hex');
-    //  if (hash == req.headers['x-paystack-signature']) {
-    //  // Retrieve the request's body
-    //  const event = req.body;
-    //  console.log(event)
-    //  // Do something with event  
-    //  }
-    const hash = crypto
-        .createHmac('sha512', "sk_test_68adfa77e69be650635fa320a35025a9dfb56048")
-        .update(JSON.stringify(req.body))
-        .digest('hex');
-        console.log('Generated Hash:', hash);
-        console.log('Received Signature:', req.headers['x-paystack-signature']);
+     const hash = crypto.createHmac('sha512', PAYSTACK_SECRET_KEY).update(JSON.stringify(req.body)).digest('hex');
+     if (hash == req.headers['x-paystack-signature']) {
+     // Retrieve the request's body
+     const event = req.body;
+     console.log(event)
+     console.log(`Webhook received: ${JSON.stringify(event)}`);
+     // Do something with event  
+     }
 
     if (hash !== req.headers['x-paystack-signature']) {
         return res.status(401).json({ message: 'Invalid Webhook Signature' });
     }
-
     const event = req.body;
-    console.log(`Webhook received: ${JSON.stringify(event)}`);
-
     // Process the webhook event
     if (event.event === 'charge.success') {
         console.log('Payment successful:', event.data.reference);
