@@ -59,19 +59,12 @@ app.post('/webhook', (req, res) => {
         .update(JSON.stringify(req.body))
         .digest('hex');
     const signature = req.headers['x-paystack-signature'];
-    console.log("AM herrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr",hash)
-    console.log(signature)
-
-    if (hash !== signature) {
+    if (hash === signature) {
         return res.status(401).json({ message: 'Invalid Webhook Signature' });
     }
-
     const event = req.body;
-    console.log(`Webhook received: ${JSON.stringify(event)}`);
-
     // Process the webhook event
     if (event.event === 'charge.success') {
-        console.log('Payment successful:', event.data.reference);
     }
 
     res.status(200).json({ status: 'success' });
